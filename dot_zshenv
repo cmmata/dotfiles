@@ -1,0 +1,6 @@
+export PATH=$PATH:./node_modules/.bin:$HOME/.config/yarn/global/node_modules/.bin:./vendor/bin:$HOME/.pulumi/bin:$HOME/.local/bin:$HOME/.cargo/bin
+export EDITOR=nano
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+fpath=(~/.zfunc $fpath)
+autoload -Uz compinit
+compinit
