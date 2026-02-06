@@ -3,3 +3,41 @@
 	name = {{ .username }}
 [core]
 	autocrlf = input
+
+[includeIf "gitdir:~/dev/opensource/"]
+	path = ~/dev/opensource/.gitconfig
+
+[credential "https://github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+
+[push]
+	pushOption = merge_request.create
+	pushOption = merge_request.remove_source_branch
+
+[diff]
+	external = difft
+
+[alias]
+	st = status
+	co = checkout
+	cm = commit
+	am = commit --amend
+	br = branch
+	bl = branch -av
+	del = branch -D
+	tl = tag -l -n
+	df = difftool
+	diffc = diff --cached
+	difftoolc = difftool --cached
+	diffs = diff --stat
+	confg = config --global
+	lg = ! git log --oneline --color | devmoji --format unicode | less -r
+	logff = log --format=fuller
+	lsb = log --pretty=format:"%C(auto)%h%d\\ %s\\ %C(cyan)[%aN]" --graph   # List commits on this branch, formatted
+	nah = "!f(){ git reset --hard; git clean -df; if [ -d ".git/rebase-apply" ] || [ -d ".git/rebase-merge" ]; then git rebase --abort; fi; }; f"
+	dlog = "!f() { GIT_EXTERNAL_DIFF=difft git log -p --ext-diff; }; f"
