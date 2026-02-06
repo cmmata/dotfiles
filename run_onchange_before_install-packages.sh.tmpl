@@ -3,7 +3,7 @@
 # This script is managed by chezmoi.
 # It runs whenever the contents of packages.yaml or the Ansible playbook change.
 # PACKAGE_HASH: {{ include ".chezmoidata/packages.yaml" | sha256sum }}
-# PLAYBOOK_HASH: {{ include "ansible/playbook.yml.tmpl" | sha256sum }}
+# PLAYBOOK_HASH: {{ include "ansible/playbook.yml" | sha256sum }}
 
 set -euo pipefail
 
@@ -18,6 +18,9 @@ echo "Checking/Installing packages and fonts via Ansible..."
 # In Python, you'd use 'subprocess.run'.
 # Both languages favor explicit error handling over shell's 'set -e'.
 
-ansible-playbook {{ joinPath .chezmoi.sourceDir "ansible/playbook.yml.tmpl" | quote }} --ask-become-pass
+ansible-playbook {{ joinPath .chezmoi.sourceDir "ansible/playbook.yml" | quote }} \
+  --extra-vars 'cli_packages={{ .packages.cli | toJson }}' \
+  --extra-vars 'nerd_fonts={{ .packages.fonts | toJson }}' \
+  --ask-become-pass
 
 echo "Infrastructure sync complete."

@@ -4,31 +4,28 @@
   connection: local
   become: true
   vars:
-    # Injected via Chezmoi template
-    cli_packages: {{ .packages.cli | toJson }}
-    nerd_fonts: {{ .packages.fonts | toJson }}
     font_dir: "/usr/local/share/fonts/nerd-fonts"
 
   tasks:
     - name: Ensure CLI tools are installed (dnf)
       ansible.builtin.dnf:
-        name: "{{ "{{" }} cli_packages {{ "}}" }}"
+        name: "{{ cli_packages }}"
         state: present
       when: ansible_os_family == "RedHat"
 
     - name: Ensure font directory exists
       ansible.builtin.file:
-        path: "{{ "{{" }} font_dir {{ "}}" }}"
+        path: "{{ font_dir }}"
         state: directory
         mode: '0755'
 
     - name: Install Nerd Fonts
       ansible.builtin.unarchive:
-        src: "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/{{ "{{" }} item {{ "}}" }}.zip"
-        dest: "{{ "{{" }} font_dir {{ "}}" }}"
+        src: "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/{{ item }}.zip"
+        dest: "{{ font_dir }}"
         remote_src: yes
-        creates: "{{ "{{" }} font_dir {{ "}}" }}/{{ "{{" }} item {{ "}}" }}"
-      loop: "{{ "{{" }} nerd_fonts {{ "}}" }}"
+        creates: "{{ font_dir }}/{{ item }}"
+      loop: "{{ nerd_fonts }}"
       register: font_install
       ignore_errors: yes
 
