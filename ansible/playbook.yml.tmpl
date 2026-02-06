@@ -5,14 +5,8 @@
   become: true
   vars:
     # Injected via Chezmoi template
-    cli_packages:
-      {{- range .packages.cli }}
-      - {{ . }}
-      {{- end }}
-    nerd_fonts:
-      {{- range .packages.fonts }}
-      - {{ . }}
-      {{- end }}
+    cli_packages: {{ .packages.cli | toJson }}
+    nerd_fonts: {{ .packages.fonts | toJson }}
     font_dir: "/usr/local/share/fonts/nerd-fonts"
 
   tasks:
