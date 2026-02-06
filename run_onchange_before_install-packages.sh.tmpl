@@ -19,8 +19,8 @@ echo "Checking/Installing packages and fonts via Ansible..."
 # Both languages favor explicit error handling over shell's 'set -e'.
 
 ansible-playbook {{ joinPath .chezmoi.sourceDir "ansible/playbook.yml" | quote }} \
-  --extra-vars 'cli_packages={{ .packages.cli | toJson }}' \
-  --extra-vars 'nerd_fonts={{ .packages.fonts | toJson }}' \
+  --extra-vars 'cli_packages={{ .cli | toJson }}' \
+  --extra-vars 'nerd_fonts={{ .fonts | toJson }}' \
   --ask-become-pass
 
 echo "Infrastructure sync complete."
