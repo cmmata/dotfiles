@@ -1,0 +1,8 @@
+packages:
+  cli:
+    - bat
+    - eza
+    - fzf
+    - ripgrep
+  fonts:
+    - JetBrainsMono

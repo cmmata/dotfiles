@@ -1,0 +1,44 @@
+---
+- name: Managed Dotfiles Infrastructure
+  hosts: localhost
+  connection: local
+  become: true
+  vars:
+    # Injected via Chezmoi template
+    cli_packages:
+      {{- range .packages.cli }}
+      - {{ . }}
+      {{- end }}
+    nerd_fonts:
+      {{- range .packages.fonts }}
+      - {{ . }}
+      {{- end }}
+    font_dir: "/usr/local/share/fonts/nerd-fonts"
+
+  tasks:
+    - name: Ensure CLI tools are installed (dnf)
+      ansible.builtin.dnf:
+        name: "{{ "{{" }} cli_packages {{ "}}" }}"
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Ensure font directory exists
+      ansible.builtin.file:
+        path: "{{ "{{" }} font_dir {{ "}}" }}"
+        state: directory
+        mode: '0755'
+
+    - name: Install Nerd Fonts
+      ansible.builtin.unarchive:
+        src: "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/{{ "{{" }} item {{ "}}" }}.zip"
+        dest: "{{ "{{" }} font_dir {{ "}}" }}"
+        remote_src: yes
+        creates: "{{ "{{" }} font_dir {{ "}}" }}/{{ "{{" }} item {{ "}}" }}"
+      loop: "{{ "{{" }} nerd_fonts {{ "}}" }}"
+      register: font_install
+      ignore_errors: yes
+
+    - name: Update font cache
+      ansible.builtin.command: fc-cache -fv
+      when: font_install.changed
+      become: false

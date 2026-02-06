@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# This script is managed by chezmoi.
+# It runs whenever the contents of packages.yaml or the Ansible playbook change.
+# PACKAGE_HASH: {{ include ".chezmoidata/packages.yaml" | sha256sum }}
+# PLAYBOOK_HASH: {{ include "ansible/playbook.yml.tmpl" | sha256sum }}
+
+set -euo pipefail
+
+# Ansible Patterns for Idempotency:
+# We rely on Ansible's internal idempotency for package installation.
+# This script itself is idempotent because chezmoi only executes it when the hashes above change.
+
+echo "Checking/Installing packages and fonts via Ansible..."
+
+# Note for Go/Python learners:
+# In Go, you'd use 'os/exec' to run commands. 
+# In Python, you'd use 'subprocess.run'.
+# Both languages favor explicit error handling over shell's 'set -e'.
+
+ansible-playbook {{ joinPath .chezmoi.sourceDir "ansible/playbook.yml.tmpl" | quote }} --ask-become-pass
+
+echo "Infrastructure sync complete."
