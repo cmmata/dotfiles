@@ -1,0 +1,11 @@
+{{ if eq .chezmoi.osRelease.id "fedora" }}
+export PATH=$PATH:./node_modules/.bin:~/.config/yarn/global/node_modules/.bin:./vendor/bin:~/.pulumi/bin:~/.local/bin:~/.cargo/bin:~/.local/share/JetBrains/Toolbox/scripts
+export CHEZMOIFOLDER=~/.local/share/chezmoi
+{{ end }}
+{{ if eq .chezmoi.os "darwin" }}
+{{ end }}
+export EDITOR=nano
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+fpath=(~/.zfunc $fpath)
+autoload -Uz compinit
+compinit

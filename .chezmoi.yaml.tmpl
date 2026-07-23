@@ -1,6 +1,8 @@
 {{- $email := promptStringOnce . "email" "Email address" -}}
 {{- $username := promptStringOnce . "username" "User name" -}}
+{{- $purpose := promptStringOnce . "purpose" "Purpose of this machine (personal or work)" -}}
 
 data:
     email: {{ $email | quote }}
     username: {{ $username | quote }}
+    purpose: {{ $purpose | quote }}

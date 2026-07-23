@@ -26,6 +26,30 @@ chezmoi init --apply github.com/appsinet/dotfiles
 *   Scripts in `run_...` files are executed at different points in `chezmoi`'s lifecycle. For example, `run_onchange_before_install-packages.sh.tmpl` is used to install packages when changes are applied.
 *   The `.chezmoidata` directory contains data that can be used in templates.
 
+## Customizing per Machine
+
+To allow for greater flexibility across different machines (e.g., personal vs. work), this `chezmoi` setup uses a `purpose` variable.
+
+When you run `chezmoi init` on a new machine, you will be prompted to define the `purpose` for that machine (e.g., "personal" or "work"). This variable is then available within your templates.
+
+For example, to include configuration specific to personal machines, you can use a conditional block like this in your templates:
+
+```go-template
+{{ if eq .purpose "personal" -}}
+# Personal machine specific configuration
+alias custom_personal_command="echo 'Hello Personal!'"
+{{- end }}
+```
+
+If you need to change the `purpose` for an existing machine or manually set it, you can edit your `~/.config/chezmoi/chezmoi.yaml` file and add/modify the `purpose` entry under the `data` section:
+
+```yaml
+data:
+  email: "your@email.com"
+  username: "your_username"
+  purpose: "personal" # or "work"
+```
+
 ## Making Changes
 
 To make changes to your dotfiles, use `chezmoi`'s commands:
