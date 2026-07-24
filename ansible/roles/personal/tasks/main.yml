@@ -3,13 +3,23 @@
 # For example, installing packages specific to personal machines.
 - name: Install personal CLI tools via Homebrew
   community.general.homebrew:
-    name: "{{ homebrew_cli }}"
+    name: "{{ item }}"
     state: present
+  loop: "{{ homebrew_cli }}"
   become: false
   register: homebrew_personal_cli_install
 
 - name: Install glab skills
   ansible.builtin.command:
     cmd: glab skills install --global
-  when: homebrew_personal_cli_install.results | selectattr('name', 'eq', 'glab') | selectattr('changed') | list | length > 0
+  when: homebrew_personal_cli_install.results | selectattr('item', 'eq', 'glab') | selectattr('changed') | list | length > 0
   become: false
+
+- name: Install Antigravity CLI
+  ansible.builtin.shell:
+    cmd: curl -fsSL https://antigravity.google/cli/install.sh | bash
+  args:
+    creates: "{{ ansible_facts.env.HOME }}/.local/bin/agy"
+  become: false
+  tags:
+    - antigravity

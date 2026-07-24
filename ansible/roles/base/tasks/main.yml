@@ -1,7 +1,4 @@
 ---
-- name: Install Homebrew
-  community.general.homebrew_install:
-
 - name: Ensure CLI tools are installed via Homebrew
   community.general.homebrew:
     name: "{{ cli_packages }}"

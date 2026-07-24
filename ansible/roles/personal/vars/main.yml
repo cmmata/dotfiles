@@ -1,4 +1,5 @@
 ---
 homebrew_cli:
-  - glab
+  - ansible-lint
   - gh
+  - glab
