@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # This script is managed by chezmoi.
-# It runs whenever the contents of packages.yaml or the Ansible playbook change.
-# PACKAGE_HASH: {{ include ".chezmoidata/packages.yaml" | sha256sum }}
+# It runs whenever the contents of the base vars file or the Ansible playbook change.
+# VARS_HASH: {{ include "ansible/roles/base/vars/main.yml" | sha256sum }}
 # PLAYBOOK_HASH: {{ include "ansible/playbook.yml" | sha256sum }}
 
 set -euo pipefail
@@ -19,8 +19,7 @@ echo "Checking/Installing packages and fonts via Ansible..."
 # Both languages favor explicit error handling over shell's 'set -e'.
 
 ansible-playbook {{ joinPath .chezmoi.sourceDir "ansible/playbook.yml" | quote }} \
-  --extra-vars 'cli_packages={{ .cli | toJson }}' \
-  --extra-vars 'nerd_fonts={{ .fonts | toJson }}' \
+  --extra-vars 'purpose={{ .purpose }}' \
   --ask-become-pass
 
 echo "Infrastructure sync complete."

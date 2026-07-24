@@ -1,0 +1,48 @@
+---
+# tasks file for base role
+- name: Ensure CLI tools are installed (dnf)
+  ansible.builtin.dnf:
+    name: "{{ cli_packages }}"
+    state: present
+  when: ansible_facts.os_family == "RedHat"
+  become: true
+
+- name: Ensure CLI tools are installed (apt)
+  ansible.builtin.apt:
+    name: "{{ cli_packages }}"
+    state: present
+    update_cache: yes
+  when: ansible_facts.os_family == "Debian"
+  become: true
+
+- name: Ensure CLI tools are installed (homebrew)
+  community.general.homebrew:
+    name: "{{ cli_packages }}"
+    state: present
+  when: ansible_facts.os_family == "Darwin"
+  become: false # Homebrew should run as the user
+
+- name: Ensure font directory exists
+  ansible.builtin.file:
+    path: "{{ font_dir }}"
+    state: directory
+    mode: '0755'
+  become: "{{ ansible_facts.os_family != 'Darwin' }}"
+
+- name: Install Nerd Fonts
+  ansible.builtin.unarchive:
+    src: "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/{{ item }}.zip"
+    dest: "{{ font_dir }}"
+    remote_src: yes
+    creates: "{{ font_dir }}/{{ item | splitext | first }}.ttf"
+  loop: "{{ nerd_fonts | default([]) }}"
+  register: font_install
+  ignore_errors: yes
+  become: "{{ ansible_facts.os_family != 'Darwin' }}"
+
+- name: Update font cache (Linux only)
+  ansible.builtin.command: fc-cache -fv
+  when:
+    - font_install.changed
+    - ansible_facts.os_family != "Darwin"
+  become: false

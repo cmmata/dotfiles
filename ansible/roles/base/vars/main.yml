@@ -1,0 +1,17 @@
+---
+# vars file for base role
+os_font_dir:
+  RedHat: "/usr/local/share/fonts/nerd-fonts"
+  Debian: "/usr/local/share/fonts/nerd-fonts"
+  Darwin: "{{ ansible_facts.env.HOME }}/Library/Fonts"
+
+font_dir: "{{ os_font_dir[ansible_facts.os_family] }}"
+
+cli_packages:
+  - bat
+  - eza
+  - fzf
+  - ripgrep
+
+nerd_fonts:
+  - JetBrainsMono
