@@ -1,25 +1,11 @@
 ---
-# tasks file for base role
-- name: Ensure CLI tools are installed (dnf)
-  ansible.builtin.dnf:
-    name: "{{ cli_packages }}"
-    state: present
-  when: ansible_facts.os_family == "RedHat"
-  become: true
+- name: Install Homebrew
+  community.general.homebrew_install:
 
-- name: Ensure CLI tools are installed (apt)
-  ansible.builtin.apt:
-    name: "{{ cli_packages }}"
-    state: present
-    update_cache: yes
-  when: ansible_facts.os_family == "Debian"
-  become: true
-
-- name: Ensure CLI tools are installed (homebrew)
+- name: Ensure CLI tools are installed via Homebrew
   community.general.homebrew:
     name: "{{ cli_packages }}"
     state: present
-  when: ansible_facts.os_family == "Darwin"
   become: false # Homebrew should run as the user
 
 - name: Ensure font directory exists

@@ -1,3 +1,15 @@
 ---
 # Tasks for the 'personal' role will go here.
 # For example, installing packages specific to personal machines.
+- name: Install personal CLI tools via Homebrew
+  community.general.homebrew:
+    name: "{{ homebrew_cli }}"
+    state: present
+  become: false
+  register: homebrew_personal_cli_install
+
+- name: Install glab skills
+  ansible.builtin.command:
+    cmd: glab skills install --global
+  when: homebrew_personal_cli_install.results | selectattr('name', 'eq', 'glab') | selectattr('changed') | list | length > 0
+  become: false

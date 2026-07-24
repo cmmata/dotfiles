@@ -1,0 +1,4 @@
+---
+homebrew_cli:
+  - glab
+  - gh
