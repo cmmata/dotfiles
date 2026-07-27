@@ -1,0 +1,11 @@
+---
+profile: production
+sarif_file: ansible-lint.sarif
+# mock_roles:
+#   - xxx
+# exclude_paths:
+  
+# enable_list:
+  
+# skip_list:
+  

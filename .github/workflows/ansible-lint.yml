@@ -16,7 +16,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Get dependencies
+        run: ansible-galaxy install -r requirements.yml
+
       - name: Run ansible-lint
-        uses: ansible/ansible-lint@v6
+        uses: ansible/ansible-lint@v25
         with:
           path: "ansible"
+
+      - name: Archive test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-report
+          path: ansible-lint.sarif
+          retention-days: 7
