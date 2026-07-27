@@ -1,4 +1,9 @@
 ---
 personal_homebrew_cli:
+  - ansible
+  - fluxcd/tap/flux
   - gh
   - glab
+  - kubernetes-cli
+  - opentofu
+  - talosctl

@@ -16,5 +16,8 @@ base_cli_packages:
   - pre-commit
   - ripgrep
 
+base_cask_packages:
+  - ghostty
+
 base_nerd_fonts:
   - JetBrainsMono

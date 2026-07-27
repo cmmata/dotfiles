@@ -1,6 +1,13 @@
 ---
 # Tasks for the 'personal' role will go here.
 # For example, installing packages specific to personal machines.
+- name: Ensure Homebrew taps are present
+  community.general.homebrew_tap:
+    name:
+      - fluxcd/tap
+    state: present
+  become: false
+
 - name: Install personal CLI tools via Homebrew
   community.general.homebrew:
     name: "{{ item }}"
@@ -15,6 +22,7 @@
   when: personal_homebrew_cli_install.results | selectattr('item', 'eq', 'glab') | selectattr('changed') | list | length > 0
   changed_when: true
   become: false
+
 
 - name: Download Antigravity CLI installer
   ansible.builtin.get_url:

@@ -3,6 +3,10 @@
 # This script is managed by chezmoi.
 # It runs whenever the contents of the base vars file or the Ansible playbook change.
 # VARS_HASH: {{ include "ansible/roles/base/vars/main.yml" | sha256sum }}
+# BASE_TASKS_HASH: {{ include "ansible/roles/base/tasks/main.yml" | sha256sum }}
+# PERSONAL_VARS_HASH: {{ include "ansible/roles/personal/vars/main.yml" | sha256sum }}
+# PERSONAL_TASKS_HASH: {{ include "ansible/roles/personal/tasks/main.yml" | sha256sum }}
+# WORK_TASKS_HASH: {{ include "ansible/roles/work/tasks/main.yml" | sha256sum }}
 # PLAYBOOK_HASH: {{ include "ansible/playbook.yml" | sha256sum }}
 
 set -euo pipefail

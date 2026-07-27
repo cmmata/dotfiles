@@ -5,12 +5,43 @@
     state: present
   become: false # Homebrew should run as the user
 
+- name: Ensure Ghostty is installed via Homebrew Cask (macOS)
+  community.general.homebrew_cask:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ base_cask_packages }}"
+  when: ansible_facts.os_family == 'Darwin'
+  become: false
+
+- name: Ensure Ghostty COPR repo is enabled (Fedora)
+  community.general.copr:
+    name: scottames/ghostty
+    state: enabled
+  when: ansible_facts.os_family == 'RedHat'
+  become: true
+
+- name: Ensure Ghostty is installed (Fedora)
+  ansible.builtin.package:
+    name: ghostty
+    state: present
+  when: ansible_facts.os_family == 'RedHat'
+  become: true
+
+- name: Ensure Ghostty is installed (Debian/Ubuntu)
+  ansible.builtin.package:
+    name: ghostty
+    state: present
+  when: ansible_facts.os_family == 'Debian'
+  become: true
+  failed_when: false
+
 - name: Ensure font directory exists
   ansible.builtin.file:
     path: "{{ base_font_dir }}"
     state: directory
     mode: "0755"
   become: "{{ ansible_facts.os_family != 'Darwin' }}"
+
 
 - name: Install Nerd Fonts
   ansible.builtin.unarchive:
