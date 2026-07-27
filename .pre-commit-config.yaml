@@ -1,0 +1,20 @@
+---
+repos:
+  - repo: local
+    hooks:
+      - id: ansible-lint
+        name: Ansible Lint
+        entry: ansible-lint
+        language: system
+        files: ^ansible/
+        stages: [pre-push]
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.24.0
+    hooks:
+      - id: gitleaks
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: detect-private-key

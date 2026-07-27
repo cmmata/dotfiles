@@ -8,9 +8,12 @@ base_os_font_dir:
 base_font_dir: "{{ base_os_font_dir[ansible_facts.os_family] }}"
 
 base_cli_packages:
+  - ansible-lint
   - bat
   - eza
   - fzf
+  - gitleaks
+  - pre-commit
   - ripgrep
 
 base_nerd_fonts:

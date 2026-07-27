@@ -30,3 +30,13 @@
     - ansible_facts.os_family != "Darwin"
   changed_when: true
   become: false
+
+- name: Ensure pre-push git hook is installed via pre-commit
+  ansible.builtin.command:
+    cmd: pre-commit install --hook-type pre-push
+  args:
+    chdir: "{{ ansible_facts.env.HOME }}/.local/share/chezmoi"
+  register: base_pre_commit_install
+  changed_when: "'pre-push' in base_pre_commit_install.stdout"
+  failed_when: false
+  become: false
