@@ -20,7 +20,7 @@
   ansible.builtin.get_url:
     url: https://antigravity.google/cli/install.sh
     dest: /tmp/install_antigravity.sh
-    mode: '0755'
+    mode: "0755"
   become: false
   tags:
     - antigravity
