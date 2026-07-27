@@ -5,19 +5,29 @@
   community.general.homebrew:
     name: "{{ item }}"
     state: present
-  loop: "{{ homebrew_cli }}"
+  loop: "{{ personal_homebrew_cli }}"
   become: false
-  register: homebrew_personal_cli_install
+  register: personal_homebrew_cli_install
 
 - name: Install glab skills
   ansible.builtin.command:
     cmd: glab skills install --global
-  when: homebrew_personal_cli_install.results | selectattr('item', 'eq', 'glab') | selectattr('changed') | list | length > 0
+  when: personal_homebrew_cli_install.results | selectattr('item', 'eq', 'glab') | selectattr('changed') | list | length > 0
+  changed_when: true
   become: false
 
+- name: Download Antigravity CLI installer
+  ansible.builtin.get_url:
+    url: https://antigravity.google/cli/install.sh
+    dest: /tmp/install_antigravity.sh
+    mode: '0755'
+  become: false
+  tags:
+    - antigravity
+
 - name: Install Antigravity CLI
-  ansible.builtin.shell:
-    cmd: curl -fsSL https://antigravity.google/cli/install.sh | bash
+  ansible.builtin.command:
+    cmd: /tmp/install_antigravity.sh
   args:
     creates: "{{ ansible_facts.env.HOME }}/.local/bin/agy"
   become: false

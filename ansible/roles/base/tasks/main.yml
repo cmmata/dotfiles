@@ -1,13 +1,13 @@
 ---
 - name: Ensure CLI tools are installed via Homebrew
   community.general.homebrew:
-    name: "{{ cli_packages }}"
+    name: "{{ base_cli_packages }}"
     state: present
   become: false # Homebrew should run as the user
 
 - name: Ensure font directory exists
   ansible.builtin.file:
-    path: "{{ font_dir }}"
+    path: "{{ base_font_dir }}"
     state: directory
     mode: '0755'
   become: "{{ ansible_facts.os_family != 'Darwin' }}"
@@ -15,17 +15,18 @@
 - name: Install Nerd Fonts
   ansible.builtin.unarchive:
     src: "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/{{ item }}.zip"
-    dest: "{{ font_dir }}"
-    remote_src: yes
-    creates: "{{ font_dir }}/{{ item | splitext | first }}.ttf"
-  loop: "{{ nerd_fonts | default([]) }}"
-  register: font_install
-  ignore_errors: yes
+    dest: "{{ base_font_dir }}"
+    remote_src: true
+    creates: "{{ base_font_dir }}/{{ item | splitext | first }}.ttf"
+  loop: "{{ base_nerd_fonts | default([]) }}"
+  register: base_font_install
+  ignore_errors: true
   become: "{{ ansible_facts.os_family != 'Darwin' }}"
 
 - name: Update font cache (Linux only)
   ansible.builtin.command: fc-cache -fv
   when:
-    - font_install.changed
+    - base_font_install.changed
     - ansible_facts.os_family != "Darwin"
+  changed_when: true
   become: false
