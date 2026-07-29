@@ -1,0 +1,28 @@
+{{- $targetFile := joinPath .chezmoi.homeDir ".gemini/antigravity-cli/settings.json" -}}
+{{- $existing := dict -}}
+{{- if stat $targetFile -}}
+  {{- $existing = include $targetFile | fromJson -}}
+{{- end -}}
+{{- $trusted := get $existing "trustedWorkspaces" | default (list) -}}
+{{- $config := dict
+  "colorScheme" "tokyo night"
+  "notifications" true
+  "permissions" (dict "allow" (list
+    "command(grep)"
+    "command(head)"
+    "command(find)"
+    "command(git status)"
+    "command(ansible-lint)"
+    "command(cat)"
+    "command(echo)"
+    "command(ls)"
+    "command(which)"
+    "command(brew info)"
+    "command(brew search)"
+    "command(git log)"
+    "command(tofu fmt)"
+    "command(tofu validate)"
+  ))
+  "trustedWorkspaces" $trusted
+-}}
+{{ $config | toPrettyJson }}
