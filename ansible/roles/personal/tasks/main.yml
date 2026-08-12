@@ -17,6 +17,22 @@
   become: false
   register: personal_homebrew_cli_install
 
+- name: Download opencode-desktop .deb (Debian/Ubuntu)
+  ansible.builtin.get_url:
+    url: https://opencode.ai/download/stable/linux-x64-deb
+    dest: /tmp/opencode-desktop.deb
+    mode: "0644"
+    timeout: 300
+  when: ansible_facts.os_family == 'Debian'
+  become: false
+
+- name: Install opencode-desktop via APT (Debian/Ubuntu)
+  ansible.builtin.apt:
+    deb: /tmp/opencode-desktop.deb
+    state: present
+  when: ansible_facts.os_family == 'Debian'
+  become: true
+
 - name: Install glab skills
   ansible.builtin.command:
     cmd: glab skills install --global
