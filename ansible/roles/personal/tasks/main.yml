@@ -5,6 +5,7 @@
   community.general.homebrew_tap:
     name:
       - fluxcd/tap
+      - anomalyco/tap
     state: present
   become: false
 

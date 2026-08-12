@@ -15,7 +15,7 @@ Before you can use these dotfiles on a new machine, you need to install the foll
 To install and apply these dotfiles on a new computer, run the following command. This will initialize `chezmoi` with this repository and apply the dotfiles to your home directory.
 
 ```bash
-chezmoi init --apply github.com/appsinet/dotfiles
+chezmoi init --apply github.com/cmmata/dotfiles
 ```
 
 ## How It Works

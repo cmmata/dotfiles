@@ -5,5 +5,6 @@ personal_homebrew_cli:
   - gh
   - glab
   - kubernetes-cli
+  - opencode
   - opentofu
   - talosctl
