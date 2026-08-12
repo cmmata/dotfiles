@@ -33,6 +33,32 @@
   when: ansible_facts.os_family == 'Debian'
   become: true
 
+- name: Install personal packages via APT (Debian/Ubuntu)
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ personal_apt_packages }}"
+  when: ansible_facts.os_family == 'Debian'
+  become: true
+
+- name: Ensure Flathub remote is present
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+    method: user
+  when: ansible_facts.os_family == 'Debian'
+  become: false
+
+- name: Install personal packages via Flatpak (Debian/Ubuntu)
+  community.general.flatpak:
+    name: "{{ item }}"
+    state: present
+    method: user
+  loop: "{{ personal_flatpak_packages }}"
+  when: ansible_facts.os_family == 'Debian'
+  become: false
+
 - name: Install glab skills
   ansible.builtin.command:
     cmd: glab skills install --global

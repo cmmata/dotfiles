@@ -8,3 +8,13 @@ personal_homebrew_cli:
   - opencode
   - opentofu
   - talosctl
+
+personal_cask_packages:
+  - opencode-desktop
+
+personal_apt_packages:
+  - flatpak
+  - podman
+
+personal_flatpak_packages:
+  - io.podman_desktop.PodmanDesktop
