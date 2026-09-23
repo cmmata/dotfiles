@@ -1,6 +1,7 @@
 ---
 personal_homebrew_cli:
   - ansible
+  - difftastic
   - fluxcd/tap/flux
   - gh
   - glab
