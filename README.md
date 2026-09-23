@@ -28,9 +28,9 @@ chezmoi init --apply github.com/cmmata/dotfiles
 
 ## Customizing per Machine
 
-To allow for greater flexibility across different machines (e.g., personal vs. work), this `chezmoi` setup uses a `purpose` variable.
+To allow for greater flexibility across different machines (e.g., personal vs. server), this `chezmoi` setup uses a `purpose` variable.
 
-When you run `chezmoi init` on a new machine, you will be prompted to define the `purpose` for that machine (e.g., "personal" or "work"). This variable is then available within your templates.
+When you run `chezmoi init` on a new machine, you will be prompted to define the `purpose` for that machine (e.g., "personal" or "server"). This variable is then available within your templates.
 
 For example, to include configuration specific to personal machines, you can use a conditional block like this in your templates:
 
@@ -47,7 +47,7 @@ If you need to change the `purpose` for an existing machine or manually set it, 
 data:
   email: "your@email.com"
   username: "your_username"
-  purpose: "personal" # or "work"
+  purpose: "personal" # or "server"
 ```
 
 ## Making Changes

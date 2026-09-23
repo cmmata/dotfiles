@@ -1,12 +1,7 @@
 # Chezmoi ignore rules for machine scoping
 
 {{ if ne .purpose "personal" }}
-# Ignore personal AI agent skills on non-personal (work) machines
+# Ignore personal AI agent skills on non-personal machines
 .agents/skills/personal-*/**
 .agents/skills/terraform-skill/**
-{{ end }}
-
-{{ if ne .purpose "work" }}
-# Ignore work AI agent skills on personal machines
-
 {{ end }}

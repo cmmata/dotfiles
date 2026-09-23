@@ -5,8 +5,7 @@ System packages and fonts installed via **Ansible** (run as a chezmoi `run_oncha
 
 ## Supported platforms
 
-- **Fedora Linux** (primary)
-- **macOS** (partial — `.zshenv` has a placeholder block)
+- **Linux** (Fedora, Debian/Ubuntu)
 
 ## Key files
 
@@ -24,7 +23,7 @@ System packages and fonts installed via **Ansible** (run as a chezmoi `run_oncha
 
 - Source files use chezmoi naming: `dot_` prefix → `.` in home, `.tmpl` suffix for templates.
 - Template variables from `.chezmoi.yaml.tmpl` (`.email`, `.username`) or `.chezmoidata/*.yaml`.
-- OS-specific logic uses `.chezmoi.osRelease.id` (Linux) and `.chezmoi.os` (darwin).
+- OS-specific logic uses `.chezmoi.osRelease.id` (Linux).
 - Ansible runs locally (`connection: local`, `become: true`) — only for Fedora (RedHat family).
 - When adding new CLI tools or fonts, update `.chezmoidata/packages.yaml` only; Ansible picks it up automatically.
 

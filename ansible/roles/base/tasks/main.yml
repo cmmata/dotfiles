@@ -5,13 +5,6 @@
     state: present
   become: false # Homebrew should run as the user
 
-- name: Ensure Ghostty is installed via Homebrew Cask (macOS)
-  community.general.homebrew_cask:
-    name: "{{ item }}"
-    state: present
-  loop: "{{ base_cask_packages }}"
-  when: ansible_facts.os_family == 'Darwin'
-  become: false
 
 - name: Ensure Ghostty COPR repo is enabled (Fedora)
   community.general.copr:
@@ -35,12 +28,55 @@
   become: true
   failed_when: false
 
+- name: Ensure Microsoft APT repository is configured (Debian/Ubuntu)
+  ansible.builtin.deb822_repository:
+    name: vscode
+    types: [deb]
+    uris:
+      - https://packages.microsoft.com/repos/code
+    suites:
+      - stable
+    components:
+      - main
+    signed_by: https://packages.microsoft.com/keys/microsoft.asc
+    state: present
+  when: ansible_facts.os_family == 'Debian'
+  become: true
+
+- name: Ensure VSCode is installed (Debian/Ubuntu)
+  ansible.builtin.apt:
+    name: code
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+  when: ansible_facts.os_family == 'Debian'
+  become: true
+
+- name: Ensure Microsoft YUM/DNF repository is configured (Fedora)
+  ansible.builtin.yum_repository:
+    name: code
+    description: Visual Studio Code
+    baseurl: https://packages.microsoft.com/yumrepos/vscode
+    enabled: true
+    gpgcheck: true
+    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+    state: present
+  when: ansible_facts.os_family == 'RedHat'
+  become: true
+
+- name: Ensure VSCode is installed (Fedora)
+  ansible.builtin.package:
+    name: code
+    state: present
+  when: ansible_facts.os_family == 'RedHat'
+  become: true
+
 - name: Ensure font directory exists
   ansible.builtin.file:
     path: "{{ base_font_dir }}"
     state: directory
     mode: "0755"
-  become: "{{ ansible_facts.os_family != 'Darwin' }}"
+  become: true
 
 
 - name: Install Nerd Fonts
@@ -50,17 +86,9 @@
     remote_src: true
     creates: "{{ base_font_dir }}/{{ item | splitext | first }}.ttf"
   loop: "{{ base_nerd_fonts | default([]) }}"
-  register: base_font_install
-  ignore_errors: true
-  become: "{{ ansible_facts.os_family != 'Darwin' }}"
-
-- name: Update font cache (Linux only)
-  ansible.builtin.command: fc-cache -fv
-  when:
-    - base_font_install.changed
-    - ansible_facts.os_family != "Darwin"
-  changed_when: true
-  become: false
+  failed_when: false
+  become: true
+  notify: Update font cache
 
 - name: Ensure pre-push git hook is installed via pre-commit
   ansible.builtin.command:

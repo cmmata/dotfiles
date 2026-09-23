@@ -10,8 +10,6 @@ personal_homebrew_cli:
   - opentofu
   - talosctl
 
-personal_cask_packages:
-  - opencode-desktop
 
 personal_apt_packages:
   - flatpak
