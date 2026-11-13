@@ -165,6 +165,20 @@
   tags:
     - antigravity
 
+- name: Download Mistral Vibe CLI installer
+  ansible.builtin.get_url:
+    url: https://mistral.ai/vibe/install.sh
+    dest: /tmp/install_vibe.sh
+    mode: "0755"
+  become: false
+
+- name: Install Mistral Vibe CLI
+  ansible.builtin.command:
+    cmd: /tmp/install_vibe.sh
+  args:
+    creates: "{{ ansible_facts.env.HOME }}/.local/bin/vibe"
+  become: false
+
 - name: Ensure pre-push git hook is installed via pre-commit
   ansible.builtin.command:
     cmd: pre-commit install --hook-type pre-push
