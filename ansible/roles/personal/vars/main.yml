@@ -1,15 +1,23 @@
 ---
+personal_font_dir: "/usr/local/share/fonts/nerd-fonts"
+
+personal_nerd_fonts:
+  - JetBrainsMono
+
 personal_homebrew_cli:
   - ansible
+  - ansible-lint
+  - bitwarden-cli
   - difftastic
   - fluxcd/tap/flux
   - gh
   - glab
+  - gitleaks
   - kubernetes-cli
   - opencode
   - opentofu
+  - pre-commit
   - talosctl
-
 
 personal_apt_packages:
   - flatpak

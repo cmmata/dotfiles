@@ -1,15 +1,7 @@
 ---
 # vars file for base role
-base_font_dir: "/usr/local/share/fonts/nerd-fonts"
-
 base_cli_packages:
-  - ansible-lint
   - bat
   - eza
   - fzf
-  - gitleaks
-  - pre-commit
   - ripgrep
-
-base_nerd_fonts:
-  - JetBrainsMono

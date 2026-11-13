@@ -1,6 +1,4 @@
 ---
-# Tasks for the 'personal' role will go here.
-# For example, installing packages specific to personal machines.
 - name: Ensure Homebrew taps are present
   community.general.homebrew_tap:
     name:
@@ -16,6 +14,71 @@
   loop: "{{ personal_homebrew_cli }}"
   become: false
   register: personal_homebrew_cli_install
+
+- name: Ensure Ghostty COPR repo is enabled (Fedora)
+  community.general.copr:
+    name: scottames/ghostty
+    state: enabled
+  when: ansible_facts.os_family == 'RedHat'
+  become: true
+
+- name: Ensure Ghostty is installed (Fedora)
+  ansible.builtin.package:
+    name: ghostty
+    state: present
+  when: ansible_facts.os_family == 'RedHat'
+  become: true
+
+- name: Ensure Ghostty is installed (Debian/Ubuntu)
+  ansible.builtin.package:
+    name: ghostty
+    state: present
+  when: ansible_facts.os_family == 'Debian'
+  become: true
+  failed_when: false
+
+- name: Ensure Microsoft APT repository is configured (Debian/Ubuntu)
+  ansible.builtin.deb822_repository:
+    name: vscode
+    types: [deb]
+    uris:
+      - https://packages.microsoft.com/repos/code
+    suites:
+      - stable
+    components:
+      - main
+    signed_by: https://packages.microsoft.com/keys/microsoft.asc
+    state: present
+  when: ansible_facts.os_family == 'Debian'
+  become: true
+
+- name: Ensure VSCode is installed (Debian/Ubuntu)
+  ansible.builtin.apt:
+    name: code
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+  when: ansible_facts.os_family == 'Debian'
+  become: true
+
+- name: Ensure Microsoft YUM/DNF repository is configured (Fedora)
+  ansible.builtin.yum_repository:
+    name: code
+    description: Visual Studio Code
+    baseurl: https://packages.microsoft.com/yumrepos/vscode
+    enabled: true
+    gpgcheck: true
+    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+    state: present
+  when: ansible_facts.os_family == 'RedHat'
+  become: true
+
+- name: Ensure VSCode is installed (Fedora)
+  ansible.builtin.package:
+    name: code
+    state: present
+  when: ansible_facts.os_family == 'RedHat'
+  become: true
 
 - name: Download opencode-desktop .deb (Debian/Ubuntu)
   ansible.builtin.get_url:
@@ -59,13 +122,30 @@
   when: ansible_facts.os_family == 'Debian'
   become: false
 
+- name: Ensure font directory exists
+  ansible.builtin.file:
+    path: "{{ personal_font_dir }}"
+    state: directory
+    mode: "0755"
+  become: true
+
+- name: Install Nerd Fonts
+  ansible.builtin.unarchive:
+    src: "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/{{ item }}.zip"
+    dest: "{{ personal_font_dir }}"
+    remote_src: true
+    creates: "{{ personal_font_dir }}/{{ item | splitext | first }}.ttf"
+  loop: "{{ personal_nerd_fonts | default([]) }}"
+  failed_when: false
+  become: true
+  notify: Update font cache
+
 - name: Install glab skills
   ansible.builtin.command:
     cmd: glab skills install --global
   when: personal_homebrew_cli_install.results | selectattr('item', 'eq', 'glab') | selectattr('changed') | list | length > 0
   changed_when: true
   become: false
-
 
 - name: Download Antigravity CLI installer
   ansible.builtin.get_url:
@@ -84,3 +164,13 @@
   become: false
   tags:
     - antigravity
+
+- name: Ensure pre-push git hook is installed via pre-commit
+  ansible.builtin.command:
+    cmd: pre-commit install --hook-type pre-push
+  args:
+    chdir: "{{ ansible_facts.env.HOME }}/.local/share/chezmoi"
+  register: personal_pre_commit_install
+  changed_when: "'pre-push' in personal_pre_commit_install.stdout"
+  failed_when: false
+  become: false

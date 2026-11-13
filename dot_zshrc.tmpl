@@ -70,7 +70,11 @@ HIST_STAMPS="yyyy-mm-dd"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
+{{ if eq .purpose "personal" -}}
 plugins=(ansible colorize colored-man-pages common-aliases command-not-found composer docker docker-compose dotenv flutter fzf git history history-substring-search npm python rsync symfony symfony2 terraform vscode yarn zsh-autosuggestions zsh-syntax-highlighting)
+{{- else -}}
+plugins=(colorize colored-man-pages common-aliases command-not-found dotenv fzf git history history-substring-search rsync zsh-autosuggestions zsh-syntax-highlighting)
+{{- end }}
 
 ZSH_DOTENV_FILE=.env.local
 
@@ -154,6 +158,10 @@ fi
 {{- end }}
 
 # Aliases in this pc
+{{ if eq .purpose "personal" -}}
 alias chezedit='code ~/.local/share/chezmoi'
+{{- else -}}
+alias chezedit='${EDITOR:-nano} ~/.local/share/chezmoi'
+{{- end }}
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
