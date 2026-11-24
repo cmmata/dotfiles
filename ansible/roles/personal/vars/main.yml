@@ -5,19 +5,25 @@ personal_nerd_fonts:
   - JetBrainsMono
 
 personal_homebrew_cli:
+  - age
   - ansible
   - ansible-lint
   - bitwarden-cli
   - difftastic
+  - direnv
   - fluxcd/tap/flux
   - gh
   - glab
   - gitleaks
+  - helm
   - kubernetes-cli
   - opencode
   - opentofu
   - pre-commit
+  - pulumi
+  - sops
   - talosctl
+  - tmux
 
 personal_apt_packages:
   - flatpak
