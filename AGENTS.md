@@ -27,6 +27,11 @@ System packages and fonts installed via **Ansible** (run as a chezmoi `run_oncha
 - Ansible runs locally (`connection: local`, `become: true`) — only for Fedora (RedHat family).
 - When adding new CLI tools or fonts, update `.chezmoidata/packages.yaml` only; Ansible picks it up automatically.
 
+## Code style
+
+- Only add comments when they are really needed to clarify something non-obvious.
+- Prefer readable code and descriptive naming over explanatory comments.
+
 ## Common tasks
 
 - **Add a cli tool**: add name to `cli` list in `.chezmoidata/packages.yaml`.

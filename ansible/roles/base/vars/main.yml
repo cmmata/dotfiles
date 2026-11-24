@@ -1,7 +1,19 @@
 ---
 # vars file for base role
+base_packages:
+  - zsh
+
 base_cli_packages:
   - bat
   - eza
   - fzf
   - ripgrep
+
+base_zsh4humans_url: https://raw.githubusercontent.com/romkatv/zsh4humans/v5
+base_zsh4humans_dir: "{{ ansible_facts.env.XDG_CACHE_HOME | default(ansible_facts.env.HOME + '/.cache', true) }}/zsh4humans/v5"
+
+base_zsh_candidates:
+  - /usr/bin/zsh
+  - /bin/zsh
+  - /usr/local/bin/zsh
+  - /home/linuxbrew/.linuxbrew/bin/zsh

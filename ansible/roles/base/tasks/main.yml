@@ -1,6 +1,44 @@
 ---
+- name: Ensure base packages are installed (Fedora/Debian)
+  ansible.builtin.package:
+    name: "{{ base_packages }}"
+    state: present
+  when: ansible_facts.os_family in ['RedHat', 'Debian']
+  become: true
+
 - name: Ensure essential CLI tools are installed via Homebrew
   community.general.homebrew:
     name: "{{ base_cli_packages }}"
     state: present
-  become: false # Homebrew should run as the user
+  become: false
+
+- name: Ensure zsh4humans directory exists
+  ansible.builtin.file:
+    path: "{{ base_zsh4humans_dir }}"
+    state: directory
+    mode: "0755"
+  become: false
+
+- name: Install zsh4humans (z4h.zsh)
+  ansible.builtin.get_url:
+    url: "{{ base_zsh4humans_url }}/z4h.zsh"
+    dest: "{{ base_zsh4humans_dir }}/z4h.zsh"
+    mode: "0644"
+  become: false
+
+- name: Locate the zsh binary
+  ansible.builtin.stat:
+    path: "{{ item }}"
+  loop: "{{ base_zsh_candidates }}"
+  register: base_zsh_stat
+
+- name: Ensure a zsh binary was found
+  ansible.builtin.fail:
+    msg: "zsh not found in any of: {{ base_zsh_candidates | join(', ') }}"
+  when: base_zsh_stat.results | selectattr('stat.exists') | list | length == 0
+
+- name: Set zsh as the default shell for the current user
+  ansible.builtin.user:
+    name: "{{ ansible_facts.user_id }}"
+    shell: "{{ base_zsh_stat.results | selectattr('stat.exists') | map(attribute='item') | first }}"
+  become: true
