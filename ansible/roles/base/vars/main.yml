@@ -6,6 +6,7 @@ base_packages:
 base_cli_packages:
   - bat
   - eza
+  - lsd
   - fzf
   - ripgrep
 
